@@ -35,6 +35,10 @@
     rabbitmq_cluster_status: "{{ rabbitmq_cluster_status.stdout | from_json }}"
   run_once: true
 
+- name: set first node to lowercase
+  ansible.builtin.set_fact:
+    primary_node: "{{groups[cluster_group_name][0] | lower}}"
+
 - name: Task block to clear new nodes before joining to cluster
   block:
     - name: Stop rabbitmq app
@@ -53,17 +57,18 @@
         timeout: 15
 
     - name: Join rabbitmq cluster
-      command: rabbitmqctl join_cluster "rabbit@{{ groups[cluster_group_name][0] }}"
+      command: rabbitmqctl join_cluster "rabbit@{{ primary_node }}"
       register: cluster_joined
       retries: 3
       delay: 15
 
     - name: Start rabbitmq app
       command: rabbitmqctl start_app
+      register: rabbitmqctl_start_app_output
   vars:
-    rabbitmq_node: "rabbit@{{ ansible_nodename }}"
+    rabbitmq_node: "rabbit@{{ ansible_hostname }}"
   when:
-    - ansible_nodename != groups[cluster_group_name][0]
+    - ansible_hostname != primary_node
     - (rabbitmq_node not in rabbitmq_cluster_status['running_nodes']) or (rabbitmq_clustering_force)
 
 - name: Set rabbitmq cluster name

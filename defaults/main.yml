@@ -3,9 +3,9 @@
 rabbitmq_os_package: false
 
 # RabbitMQ repositories in katello
-rabbitmq_repository_on_satellite:
-  - Stone_RabbitMQ_erlang_rhel7
-  - Stone_RabbitMQ_38_rhel7
+rabbitmq_repository_on_satellite: []
+#  - Stone_RabbitMQ_erlang_rhel7
+#  - Stone_RabbitMQ_38_rhel7
 
 # Always install RabbitMQ,
 # unless it's already installed and you don't want it to be replaced
@@ -13,8 +13,8 @@ rabbitmq_install_enabled: true
 
 # Install specific RabbitMQ version, unless it's redefined
 rabbitmq_major: 3
-rabbitmq_minor: 8
-rabbitmq_patch: 5
+rabbitmq_minor: 9
+rabbitmq_patch: 13
 rabbitmq_suffix: 1
 rabbitmq_release: "*"
 rabbitmq_version: "{{ rabbitmq_major }}.{{ rabbitmq_minor }}.{{ rabbitmq_patch }}"
@@ -38,8 +38,8 @@ rabbitmq_erlang_cookie_file_path: "{{ rabbitmq_home_path }}.erlang.cookie"
 
 
 # Variables can be overriden to adapt to the user case
-rabbitmq_conf_disk_free_limit_mem_relative: 1.5
-rabbitmq_conf_vm_memory_high_watermark: 0.4
+rabbitmq_conf_disk_free_limit_mem_relative: 0.5
+rabbitmq_conf_vm_memory_high_watermark: 0.7
 rabbitmq_conf_num_acceptors_tcp: 10
 
 # System number of open files
@@ -48,11 +48,11 @@ rabbitmq_system_number_open_files: 50000
 
 # RabbitMQ cluster
 rabbitmq_clustering_force: false
-rabbitmq_clustering_enabled: false
-rabbitmq_clustering_cluster_name: ""
-rabbitmq_clustering_ha_default: true
+rabbitmq_clustering_enabled: true
+rabbitmq_clustering_cluster_name: "lmcu_rabbitmq"
+rabbitmq_clustering_ha_default: false
 rabbitmq_nodename_prefix: rabbit
-rabbitmq_nodename: "{{ ansible_fqdn }}"
+rabbitmq_nodename: "{{ ansible_hostname }}"
 
 # RabbitMQ plugins
 rabbitmq_manage_plugins: true
@@ -62,10 +62,8 @@ rabbitmq_plugins_prefix_path: /usr/lib/rabbitmq
 rabbitmq_plugins:
   - name: rabbitmq_management
     state: enabled
-  - name: rabbitmq_shovel
-    state: enabled
-  - name: rabbitmq_shovel_management
-    state: enabled
+  #- name: rabbitmq_prometheus
+  #  state: enabled
 
 # RabbitMQ Users
 rabbitmq_manage_users: true

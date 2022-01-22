@@ -65,3 +65,4 @@
 - name: Ensure rabbitmq app is started so we can interact with rabbit
   command: rabbitmqctl start_app
   when: rabbitmq_service is changed
+  register: rabbitmqctl_start_output

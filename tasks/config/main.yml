@@ -34,10 +34,10 @@
 
 - name: Task block to force longnames when rabbit is in cluster
   block:
-    - name: Set additional_env fact with value USE_LONGNAME=true
+    - name: Set additional_env fact with value USE_LONGNAME=false
       set_fact:
         additional_env:
-          USE_LONGNAME: true
+          USE_LONGNAME: false
 
     - name: Force longnames when rabbit is in cluster
       set_fact:
